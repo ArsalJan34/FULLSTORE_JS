@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Store</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="firebase.js"></script>
+</head>
+
+<body>
+  <h1>Welcome to the Store</h1>
+  <div id="products-container" class="store-container"></div>
+  <a href="cart.html">Go to Cart</a>
+  <button onclick="logout()">Logout</button>
+
+  <script>
+    auth.onAuthStateChanged(user => {
+      if (!user) window.location.href = 'login.html';
+    });
+
+    // Load Products
+    const container = document.getElementById('products-container');
+    db.collection('products').get().then(snapshot => {
+      snapshot.docs.forEach(doc => {
+        const p = doc.data();
+        const div = document.createElement('div');
+        div.className = 'product-card';
+        div.innerHTML = `
+      <h3>${p.name}</h3>
+      <p>${p.description}</p>
+      <p>Price: $${p.price}</p>
+      <button onclick='addToCart("${doc.id}", "${p.name}", ${p.price})'>Add to Cart</button>
+    `;
+        container.appendChild(div);
+      });
+    });
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    function addToCart(id, name, price) {
+      let item = cart.find(i => i.id === id);
+      if (item) item.quantity++; else cart.push({ id, name, price, quantity: 1 });
+      localStorage.setItem('cart', JSON.stringify(cart));
+      alert('Added to cart!');
+    }
+
+    function logout() { auth.signOut().then(() => window.location.href = 'login.html'); }
+  </script>
+</body>
+
+</html>

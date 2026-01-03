@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="firebase.js"></script>
+</head>
+
+<body>
+  <h1>Your Cart</h1>
+  <div id="cart-container" class="store-container"></div>
+  <button onclick="checkout()">Checkout</button>
+  <a href="index.html">Back to Store</a>
+
+  <script>
+    auth.onAuthStateChanged(user => { if (!user) window.location.href = 'login.html'; });
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const container = document.getElementById('cart-container');
+    let total = 0;
+    cart.forEach((item, index) => {
+      const div = document.createElement('div');
+      div.innerHTML = `${item.name} - $${item.price} x ${item.quantity} <button onclick="removeItem(${index})">Remove</button>`;
+      container.appendChild(div);
+      total += item.price * item.quantity;
+    });
+    function removeItem(i) { cart.splice(i, 1); localStorage.setItem('cart', JSON.stringify(cart)); location.reload(); }
+
+    function checkout() {
+      const user = auth.currentUser;
+      if (cart.length === 0) { alert('Cart empty'); return; }
+      db.collection('orders').add({
+        userId: user.uid,
+        items: cart,
+        totalPrice: total,
+        status: 'pending',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(() => {
+        alert('Order placed successfully!');
+        localStorage.removeItem('cart');
+        window.location.href = 'index.html';
+      });
+    }
+  </script>
+</body>
+
+</html>

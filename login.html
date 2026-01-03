@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="firebase.js"></script>
+</head>
+
+<body>
+  <div class="auth-container">
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p>Don't have an account? <a href="signup.html">Signup</a></p>
+  </div>
+
+  <script>
+
+      function login() {
+  const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      auth.signInWithEmailAndPassword(email, password)
+    .then((cred) => {
+        console.log("Logged in:", cred.user.email);
+
+      db.collection('users').doc(cred.user.uid).get()
+        .then(doc => {
+          if (doc.exists && doc.data().isAdmin === true) {
+        window.location.href = "admin.html";
+          } else {
+        window.location.href = "index.html";
+          }
+        });
+    })
+    .catch((error) => {
+        console.error(error.code, error.message);
+      alert(error.message); // SHOW REAL ERROR
+    });
+}
+
+
+  </script>
+</body>
+
+</html>

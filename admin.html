@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="firebase.js"></script>
+</head>
+
+<body>
+  <h1>Admin Dashboard</h1>
+
+  <h2>Products</h2>
+  <div>
+    <input id="pname" placeholder="Product Name">
+    <input id="pdesc" placeholder="Description">
+    <input id="pprice" type="number" placeholder="Price">
+    <button onclick="addProduct()">Add Product</button>
+  </div>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="products-table"></tbody>
+  </table>
+
+  <h2>Orders</h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Items</th>
+        <th>Total</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="orders-table"></tbody>
+  </table>
+
+  <script>
+    auth.onAuthStateChanged(user => {
+      if (!user) window.location.href = 'login.html';
+      db.collection('users').doc(user.uid).get().then(doc => {
+        if (!doc.data().isAdmin) window.location.href = 'index.html';
+      });
+    });
+
+    // Load Products
+    const productsTable = document.getElementById('products-table');
+    db.collection('products').get().then(snapshot => {
+      snapshot.docs.forEach(doc => {
+        const p = doc.data();
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${p.name}</td><td>${p.description}</td><td>${p.price}</td>
+      <td><button onclick="deleteProduct('${doc.id}')">Delete</button></td>`;
+        productsTable.appendChild(tr);
+      });
+    });
+
+    function addProduct() {
+      const name = document.getElementById('pname').value;
+      const desc = document.getElementById('pdesc').value;
+      const price = Number(document.getElementById('pprice').value);
+      if (!name || !desc || !price) return alert('Fill all fields');
+      db.collection('products').add({ name, description: desc, price })
+        .then(() => alert('Product added!')).then(() => location.reload());
+    }
+
+    function deleteProduct(id) { db.collection('products').doc(id).delete().then(() => location.reload()); }
+
+    // Load Orders
+    const ordersTable = document.getElementById('orders-table');
+    db.collection('orders').orderBy('createdAt', 'desc').get().then(snapshot => {
+      snapshot.docs.forEach(doc => {
+        const o = doc.data();
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${o.userId}</td><td>${o.items.map(i => i.name + " x" + i.quantity).join(", ")}</td><td>$${o.totalPrice}</td><td>${o.status}</td>`;
+        ordersTable.appendChild(tr);
+      });
+    });
+  </script>
+</body>
+
+</html>
