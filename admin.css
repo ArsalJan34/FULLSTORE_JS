@@ -1,0 +1,86 @@
+* {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+body {
+  display: flex;
+  /* make body a flex container */
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+  height: 100vh;
+  /* full height */
+}
+
+/* Sidebar (header) on the left */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* left-align items */
+  justify-content: flex-start;
+  /* top */
+  padding: 20px;
+  background: gray;
+  width: 250px;
+  /* fixed sidebar width */
+  height: 100vh;
+  /* full height */
+  box-sizing: border-box;
+}
+
+/* Sidebar links */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.sidebar a {
+  padding: 10px 15px;
+  color: white;
+  font-weight: 500;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.sidebar a.active {
+  background: #555;
+  border-radius: 4px;
+}
+
+/* Main content area */
+.admin {
+  flex: 1;
+  /* take remaining space */
+  padding: 20px;
+  overflow-y: auto;
+  /* scroll if content is tall */
+}
+table{
+  width: 100%;
+  border: none;
+}
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+h2{
+  text-align: center;
+  background:lightblue;
+}
+input{
+  padding: 5px;
+
+}
+.inputs{
+margin: 10px 0px;
+display: flex;
+align-items: center;
+justify-content: space-evenly;
+}

@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -13,10 +13,20 @@
 </head>
 
 <body>
+<header class="header">
   <h1>Admin Dashboard</h1>
+      <nav class="sidebar">
+        <a href="#" class="active">Home</a>
+        <a href="admin.html">Products</a>
+        <a href="#">Users</a>
+        <a href="#">Categories</a>
+      </nav>
+</header>
+  <section class="admin">
+
 
   <h2>Products</h2>
-  <div>
+  <div class="inputs">
     <input id="pname" placeholder="Product Name">
     <input id="pdesc" placeholder="Description">
     <input id="pprice" type="number" placeholder="Price">
@@ -46,7 +56,7 @@
     </thead>
     <tbody id="orders-table"></tbody>
   </table>
-
+</section>
   <script>
     auth.onAuthStateChanged(user => {
       if (!user) window.location.href = 'login.html';

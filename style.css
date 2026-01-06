@@ -1,3 +1,9 @@
+*{
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  box-sizing: border-box;
+}
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -17,7 +23,11 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   border: 2px solid gray;
 }
-
+.admin h1{
+  color: blueviolet;
+  font: 500;
+  font-size: 40px;
+}
 .auth-container input,
 .auth-container button {
   width: 100%;
@@ -74,7 +84,6 @@ td {
   border: 1px solid #ccc;
   text-align: left;
 }
-
 @media(max-width:600px) {
   .product-card {
     width: 100%;
